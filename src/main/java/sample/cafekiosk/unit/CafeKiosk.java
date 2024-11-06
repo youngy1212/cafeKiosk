@@ -39,12 +39,19 @@ public class CafeKiosk {
         beverages.clear();
     }
 
+    //TDD로 재구현 해보기
+    //2단계 : GREEN
+    //3단계 : 리팩토링  (여러번도 가능)
     public int calculateTotalPrice() {
-        int totalPrice = 0;
-        for(Beverage beverage : beverages) {
-            totalPrice += beverage.getPrice();
-        }
-        return totalPrice;
+//        int totalPrice = 0;
+//        for(Beverage beverage : beverages) {
+//            totalPrice += beverage.getPrice();
+//        }
+//        return totalPrice;
+
+
+        return beverages.stream()
+                .mapToInt(Beverage::getPrice).sum();
     }
 
     public Order createOrder() {
@@ -67,4 +74,6 @@ public class CafeKiosk {
 
         return new Order(currentDateTime, beverages);
     }
+
+
 }

@@ -79,6 +79,22 @@ class CafeKioskTest {
         assertThat(cafeKiosk.getBeverages()).isEmpty();
     }
 
+    //TDD 1단계 : RED
+    @Test
+    void calculateTotalPrice(){
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        Latte latte = new Latte();
+
+        cafeKiosk.add(americano);
+        cafeKiosk.add(latte);
+
+        int tatalPrice = cafeKiosk.calculateTotalPrice();
+
+        assertThat(tatalPrice).isEqualTo(8500);
+    }
+
+
     @Test
     void CreateOrder(){
         CafeKiosk cafeKiosk = new CafeKiosk();
