@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import sample.cafekiosk.unit.beverage.Americano;
 import sample.cafekiosk.unit.beverage.Latte;
@@ -14,13 +15,10 @@ class CafeKioskTest {
 
     @Test
      void add_manual_test()  {
-        //given
         CafeKiosk cafeKiosk = new CafeKiosk();
 
-        //when
         cafeKiosk.add(new Americano());
 
-        //then
         System.out.println(">>> 담긴 음료의 수 : "+cafeKiosk.getBeverages().size());
         System.out.println(">>> 담긴 음료의 이름 : "+cafeKiosk.getBeverages().get(0).getName());
         //수동 테스트: 결국 사람이 확인해야함. 그리고 어떤게 맞는건지 알 수 없음
@@ -28,8 +26,10 @@ class CafeKioskTest {
 
     }
 
+    //@DisplayName("음료 1개 추가 테스트") //junit5 기능
+    @DisplayName("음료 1개를 추가하면 주문 목록에 담긴다.")
     @Test
-    void add(){
+    void 음료_1개_추가_테스트(){ //junit5가 없다면 한글메소드도 괜찮다.
         CafeKiosk cafeKiosk = new CafeKiosk();
         cafeKiosk.add(new Americano());
 
@@ -80,8 +80,10 @@ class CafeKioskTest {
     }
 
     //TDD 1단계 : RED
+    @DisplayName("주문 목록에 담긴 상품들의 총 금액을 계산할 수 있다.")
     @Test
     void calculateTotalPrice(){
+        // given
         CafeKiosk cafeKiosk = new CafeKiosk();
         Americano americano = new Americano();
         Latte latte = new Latte();
@@ -89,8 +91,10 @@ class CafeKioskTest {
         cafeKiosk.add(americano);
         cafeKiosk.add(latte);
 
+        // when
         int tatalPrice = cafeKiosk.calculateTotalPrice();
 
+        // then
         assertThat(tatalPrice).isEqualTo(8500);
     }
 
@@ -103,7 +107,6 @@ class CafeKioskTest {
         cafeKiosk.add(americano);
         Order order = cafeKiosk.createOrder();
 
-        //then
         assertThat(order.getBeverages()).hasSize(1);
         assertThat(order.getBeverages().get(0).getName()).isEqualTo("아메리카노");
 
@@ -114,16 +117,13 @@ class CafeKioskTest {
 
     @Test
     void CreateOrderWithCurrentTime(){
-        //given
         CafeKiosk cafeKiosk = new CafeKiosk();
         Americano americano = new Americano();
 
-        //when
         cafeKiosk.add(americano);
 
         Order order = cafeKiosk.createOrder(LocalDateTime.of(2024,11,17,10,0));
 
-        //then
         assertThat(order.getBeverages()).hasSize(1);
         assertThat(order.getBeverages().get(0).getName()).isEqualTo("아메리카노");
 
@@ -143,5 +143,7 @@ class CafeKioskTest {
                 .hasMessage("주문 시간이 아닙니다. 관리자에게 문의하세요");
 
     }
+
+
 
 }
