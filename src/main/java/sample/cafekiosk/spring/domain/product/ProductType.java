@@ -1,6 +1,5 @@
 package sample.cafekiosk.spring.domain.product;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

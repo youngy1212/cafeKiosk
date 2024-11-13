@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,6 +32,14 @@ public class Product extends BaseEntity {
 
     private int price;
 
+    @Builder
+    public Product(String name, int price, String productNumber, ProdectSellingStatus sellingStatus, ProductType type) {
+        this.name = name;
+        this.price = price;
+        this.productNumber = productNumber;
+        this.sellingStatus = sellingStatus;
+        this.type = type;
+    }
 }
 
 
