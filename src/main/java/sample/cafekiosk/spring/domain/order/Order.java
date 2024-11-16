@@ -9,15 +9,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sample.cafekiosk.spring.domain.orderproduct.OrderProduct;
 import sample.cafekiosk.spring.domain.product.BaseEntity;
+import sample.cafekiosk.spring.domain.product.Product;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -42,4 +43,22 @@ public class Order extends BaseEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProduct> orderProduct = new ArrayList<>();
 
+    public Order(List<Product> products, LocalDateTime registeredDataTime){ //테스트가 필요함 단위테스트 TDD
+        this.status = OrderStatus.INIT;
+        this.totalPrice = calculateTotalPrice(products);
+        this.registeredDataTime = registeredDataTime;
+        this.orderProduct = products.stream()
+                .map(product -> new OrderProduct(this, product))
+                .collect(Collectors.toList());
+    }
+
+    private int calculateTotalPrice(List<Product> products) { //그린 TDD 리팩토링
+        return products.stream()
+                .mapToInt(Product::getPrice)
+                .sum();
+    }
+
+    public static Order create(List<Product> products, LocalDateTime registeredDataTime) {
+        return new Order(products, registeredDataTime);
+    }
 }
