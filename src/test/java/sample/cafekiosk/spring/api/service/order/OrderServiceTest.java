@@ -59,6 +59,38 @@ class OrderServiceTest {
 
     }
 
+    @DisplayName("중복되는 상품번호 리스트로 주문을 생성할 수 있다.")
+    @Test
+    void createOrderWithDuplicateProductNumbers() {
+        // given
+        LocalDateTime now = LocalDateTime.now();
+
+        Product product = createProduct(HANDMADE,"001", 1000);
+        Product product2 = createProduct(HANDMADE,"002", 3000);
+        Product product3 = createProduct(HANDMADE,"003", 5000);
+        productRepository.saveAll(List.of(product, product2, product3));
+
+        OrderCreateRequest request = OrderCreateRequest.builder()
+                .productNumbers(List.of("001", "001"))
+                .build();
+
+        // when
+        OrderResponse orderResponse = orderService.createOrder(request,now);
+
+        // then
+        assertThat(orderResponse.getId()).isNotNull();
+        assertThat(orderResponse)
+                .extracting("registeredDataTime", "totalPrice")
+                .contains(now, 2000);
+        assertThat(orderResponse.getProducts()).hasSize(2)
+                .extracting("productNumber","price")
+                .containsExactlyInAnyOrder(
+                        Tuple.tuple("001",1000),
+                        Tuple.tuple("001",1000)
+                );
+
+    }
+
     //그냥 빌더패턴을 사용하면 너무 길어서 따로 뻄
     //테스트에 필요한 데이터만 파라미터로 받고 나머지는 기본 값으로 채우기
     private Product createProduct(ProductType type
