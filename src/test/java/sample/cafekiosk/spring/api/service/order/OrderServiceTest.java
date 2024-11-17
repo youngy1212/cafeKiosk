@@ -6,6 +6,7 @@ import static sample.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.assertj.core.groups.Tuple;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
+import sample.cafekiosk.spring.domain.order.OrderRepository;
+import sample.cafekiosk.spring.domain.orderproduct.OrderProduct;
+import sample.cafekiosk.spring.domain.orderproduct.OrderProductrRepository;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductRepository;
 import sample.cafekiosk.spring.domain.product.ProductType;
@@ -25,7 +29,23 @@ class OrderServiceTest {
     private ProductRepository productRepository;
 
     @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderProductrRepository orderProductrRepository;
+
+    @Autowired
     private OrderService orderService;
+
+    @AfterEach
+    void tearDown() { //테스트 둘다 테스트 할 경우 List 조회해서 map어 넣어줄때 키 중복 오류가 생김
+        //테스트가 끝날때마다 삭제
+        orderProductrRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+        orderRepository.deleteAllInBatch();
+
+    }
+
 
     @DisplayName("주문번호 리스트를 받아 주문을 생성한다.")
     @Test
