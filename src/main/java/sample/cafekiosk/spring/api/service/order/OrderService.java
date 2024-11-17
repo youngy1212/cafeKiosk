@@ -27,6 +27,11 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final StockRepository stockRepository;
     //주문생성
+
+    /**
+     * 재고 감소 -> 동시성 문제
+     * optimistic lock / pessimistic lock / ..
+     */
     public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime registeredDataTime) {
         List<String> productNumbers = request.getProductNumbers();
         //product
