@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sample.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
+import sample.cafekiosk.spring.api.service.order.request.OrderCreateServiceRequest;
 import sample.cafekiosk.spring.api.service.order.response.OrderResponse;
 import sample.cafekiosk.spring.domain.order.Order;
 import sample.cafekiosk.spring.domain.order.OrderRepository;
@@ -32,7 +32,7 @@ public class OrderService {
      * 재고 감소 -> 동시성 문제
      * optimistic lock / pessimistic lock / ..
      */
-    public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime registeredDataTime) {
+    public OrderResponse createOrder(OrderCreateServiceRequest request, LocalDateTime registeredDataTime) {
         List<String> productNumbers = request.getProductNumbers();
         //product
         List<Product> products = findProductsBy(productNumbers);
@@ -44,7 +44,6 @@ public class OrderService {
         Order saveOrder = orderRepository.save(order);
 
         return OrderResponse.of(saveOrder);
-
     }
 
     private void deductStockQuantities(List<Product> products) {
@@ -55,16 +54,14 @@ public class OrderService {
         Map<String, Long> procuctCountingMap = createCountingMapBy(stockProductNumbers);
 
         //재고 차감 시도
-        for(String stockProductNumber : new HashSet<>(stockProductNumbers)) {
+        for (String stockProductNumber : new HashSet<>(stockProductNumbers)) {
             Stock stock = stockMap.get(stockProductNumber);
             int quantity = procuctCountingMap.get(stockProductNumber).intValue();
 
-            if(stock.isQuantityLessThan(quantity)){
+            if (stock.isQuantityLessThan(quantity)) {
                 throw new IllegalArgumentException("재고가 부족한 상품이 있습니다.");
             }
-
             stock.deductQuantity(quantity);
-
         }
     }
 
