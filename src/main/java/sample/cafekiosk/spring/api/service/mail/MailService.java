@@ -28,6 +28,13 @@ public class MailService {
                     .content(content)
                     .build()
             );
+
+            mailSendClient.a();
+            mailSendClient.b();
+            mailSendClient.c();
+            //테스트를 할때 mailSendClient 만 mock으로 돌고
+            //a,b,c는 정상작동 했으면 좋겠다 -> 이때 Spy를 사용
+
             return true;
         }
         return false;

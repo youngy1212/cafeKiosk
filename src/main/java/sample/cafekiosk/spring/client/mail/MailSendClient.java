@@ -12,4 +12,19 @@ public class MailSendClient {
         log.info("메일 전송 : " + toEmail);
         throw new IllegalArgumentException("메일 전송");
     }
+
+    //기능이 많다고 가정
+    public void a(){
+        log.info("a");
+    }
+
+    public void b(){
+        log.info("b");
+    }
+
+    public void c(){
+        log.info("c");
+    }
+
+
 }
