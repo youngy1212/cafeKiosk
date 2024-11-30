@@ -3,18 +3,16 @@ package sample.cafekiosk.spring.api.service.mail;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sample.cafekiosk.spring.client.mail.MailSendClient;
 import sample.cafekiosk.spring.domain.history.mail.MailSendHistory;
@@ -24,8 +22,7 @@ import sample.cafekiosk.spring.domain.history.mail.MailSendHistoryRepository;
 class MailServiceTest {
 
     //어노테이션으로 리팩토링
-    //@Mock
-    @Spy
+    @Mock
     private MailSendClient mailSendClient;
 
     @Mock
@@ -44,13 +41,17 @@ class MailServiceTest {
         //MailSendHistoryRepository mailSendHistoryRepository = Mockito.mock(MailSendHistoryRepository.class);
         //MailService mailService = new MailService(mailSendClient, mailSendHistoryRepository);
 
-//        when(mailSendClient.sendMail(anyString(),anyString(),anyString(),anyString()))
-//                .thenReturn(true);
+       Mockito.when(mailSendClient.sendMail(anyString(),anyString(),anyString(),anyString()))
+                .thenReturn(true);
         //그럼sendMail 안의 mailSendHistoryRepository.save()는? -> 먹은 기본적으로 데이터가 없으면 기본값을 던져서 해결함
         //spy는 실제 객체 기반으로 가져오려해서 when 사용 X
+//        doReturn(true).when(mailSendClient)
+//                .sendMail(anyString(),anyString(),anyString(),anyString());
 
-        doReturn(true).when(mailSendClient)
-                .sendMail(anyString(),anyString(),anyString(),anyString());
+        //given절인데 when을 사용하네?
+        BDDMockito.given(mailSendClient.sendMail(anyString(),anyString(),anyString(),anyString()))
+                .willReturn(true);
+
 
         // when
         boolean result = mailService.sendMail("", "", "", "");
