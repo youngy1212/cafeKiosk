@@ -24,11 +24,12 @@ import sample.cafekiosk.spring.domain.product.ProductRepository;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductNumberFactory productNumberFactory;
 
     @Transactional
     public ProductResponse createdProduct(ProductCreateServiceRequest request) {
 
-        String nextProductNumber = createNextProductNumber();
+        String nextProductNumber = productNumberFactory.createNextProductNumber();
 
         Product product = request.toEntity(nextProductNumber);
         Product saveProduct = productRepository.save(product);
@@ -37,21 +38,6 @@ public class ProductService {
 
     }
 
-    //동시성 이슈
-    private String createNextProductNumber() {
-        //productNumber
-        //001, 002 , 003
-        //DB에서 마지막 저장된 prodect의 상품 번호를 읽어와서 +1
-        String lastProductNumber = productRepository.findLatestProduct();
-        if(lastProductNumber == null) {
-            return "001";
-        }
-        //nextProductNumber
-        int lastProductNumberInt = Integer.parseInt(lastProductNumber);
-        int NextProductNumberInt = lastProductNumberInt + 1;
-
-        return String.format("%03d", NextProductNumberInt);
-    }
 
     public List<ProductResponse> getSellingProduct() {
         List<Product> productList = productRepository.findAllBySellingStatusIn(ProdectSellingStatus.forDisplay());
