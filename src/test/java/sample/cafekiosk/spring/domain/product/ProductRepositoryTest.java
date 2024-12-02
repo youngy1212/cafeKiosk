@@ -9,12 +9,11 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+import sample.cafekiosk.spring.IntegrationTestSupport;
 
-@ActiveProfiles("test") //test 프로파일 사용
-@DataJpaTest
-class ProductRepositoryTest {
+@Transactional //DataJpaTest는 자동 롤백해주는데 Springboot는 아니라 붙여줌
+class ProductRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
     private ProductRepository productRepository;

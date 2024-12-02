@@ -6,32 +6,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import sample.cafekiosk.spring.ControllerTestSupport;
 import sample.cafekiosk.spring.api.controller.product.dto.request.ProductCreateRequest;
-import sample.cafekiosk.spring.api.service.product.ProductService;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.ProdectSellingStatus;
 import sample.cafekiosk.spring.domain.product.ProductType;
 
-@WebMvcTest(controllers = ProductController.class) //컨트롤러 관련 빈들만 올리는 수 있는 가벼운 어노테이션
-class ProductControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper; //직렬화, 역질렬화 json과 오브텍트
-
-    @MockBean
-    private ProductService productService;
+ //컨트롤러 관련 빈들만 올리는 수 있는 가벼운 어노테이션
+class ProductControllerTest extends ControllerTestSupport{
 
     @DisplayName("신규 상품을 등록한다.")
     @Test
@@ -163,7 +149,7 @@ class ProductControllerTest {
     void getSellingProducts() throws Exception {
         // given
         List<ProductResponse> result = List.of();
-        when(productService.getSellingProduct()).thenReturn(result);
+        when(productServic.getSellingProduct()).thenReturn(result);
         // when // then
         mockMvc.perform(
                         get("/api/v1/products/selling")
